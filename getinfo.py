@@ -1,5 +1,7 @@
 import requests
 import json
+import os
+
 
 search1 = '2017 Python Testing with pytest'
 APISEARCH = 'https://api.itbook.store/1.0/search/'
@@ -30,7 +32,7 @@ if __name__ == '__main__':
 
     with open(txtfile) as f:
         for book_name in f:
-            book_name = book_name.strip()
+            book_name = os.path.basename(book_name).strip()
             isbn = get_isbn(book_name)
             data = get_data(isbn)
             try:
