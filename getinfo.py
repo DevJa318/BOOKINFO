@@ -22,43 +22,52 @@ def get_data(isbn):
     api = get_json(APIBYISBN, isbn)
     return api
 
+def first_check(book_name, data):
+    if book_name[:4] == data['year'] and book_name[5:15].lower() == data['title'][:10].lower():
+        return True
+    else:
+        return False
+    
+def second_check(book_name, data):
+    if book_name[5:15].lower() == data['title'][:10].lower() \
+            and int(book_name[:4]) == int(data['year']) \
+                or int(book_name[:4]) == int(data['year'])+1 \
+                or int(book_name[:4]) == int(data['year'])-1:
+        return True
+    else:
+        return False
+
 if __name__ == '__main__':
-    datafile = open('foundapidata.json', 'a')
-    datafilecheckyear = open('checkyearapidata.json', 'a')
-    txtfile = 'allbooks.txt'
+    datafile = open('foundapidata.json', 'w')
+    datafilecheckyear = open('checkyearapidata.json', 'w')
+    txtfile = 'allbooksuniq.txt'
     datadict = {}
     datadictcheckyear = {}
     notfound = []
 
     with open(txtfile) as f:
         for book_name in f:
-            book_name = os.path.basename(book_name).strip()
-            isbn = get_isbn(book_name)
-            data = get_data(isbn)
             try:
-                if book_name[:4] == data['year'] and book_name[5:15].lower() == data['title'][:10].lower():
-                    #print("OK: Pobieram:" + book_name.upper() + "do bazy danych")
-                    datadict[book_name] = data
-                elif book_name[5:15].lower() == data['title'][:10].lower() and int(book_name[:4]) == int(data['year']) or int(book_name[:4]) == int(data['year'])+1 or int(book_name[:4]) == int(data['year'])-1:
-                    #print("WARNING: Different year: Pobieram:" + book_name.upper() + "do bazy danych")
-                    datadictcheckyear[book_name] = data
+                book_name = os.path.basename(book_name).strip()
+                isbn = get_isbn(book_name)
+                data = get_data(isbn)
+                if first_check(book_name, data):
+                    datadict[book_name.strip()] = data
+                elif second_check(book_name, data):
+                    datadictcheckyear[book_name.strip()] = data
                 else:
                     get_isbn(book_name, start=1)
                     get_data(isbn)
-                    if book_name[:4] == data['year'] and book_name[5:15].lower == data['title'][:10].lower():
-                        #print("OK: Pobieram:" + book_name.upper() + "do bazy danych")
-                        #print(data)
-                        datadict[book_name] = data
-                    elif book_name[5:15].lower() == data['title'][:10].lower() and int(book_name[:4]) == int(data['year']) or int(book_name[:4]) == int(data['year'])+1 or int(book_name[:4]) == int(data['year'])-1:
+                    if first_check(book_name, data):
+                        datadict[book_name.strip()] = data
+                    elif second_check(book_name, data):
                         #print("WARNING: Different year: Pobieram:" + book_name.upper() + "do bazy danych")
-                        datadictcheckyear[book_name] = data
+                        datadictcheckyear[book_name.strip()] = data
                     else:
                         print('ERROR:' + book_name.upper() + ' dodane do listy brakujących')
                         notfound.append(book_name)
-
             except:
-                print('NOT INT: ' + book_name)
-                notfound.append(book_name)
+                print(book_name)
 
     datafile.write(json.dumps(datadict))
     datafile.close()
@@ -68,3 +77,4 @@ if __name__ == '__main__':
     with open('notfound.txt', 'w') as f:
         for book in notfound:
             f.write(book)
+            f.write('')
