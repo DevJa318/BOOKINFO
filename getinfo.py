@@ -1,3 +1,29 @@
+"""
+
+GET INFO ABOUT BOOKS - title, subtitle, authors, publisher, language, isbn10, isbn13, 
+	pages, rating, description, price, link to image, link to book on itbook.store site, pdf if there is.
+
+input:
+	txtfile variable - path to txtfile with year and title of books one by line.
+	ie:
+	2022 Learning DevOps.pdf
+	2022 Learning Modern Linux.pdf
+	2020 PYTHON ONE-LINERS.pdf
+
+output:
+	foundapidata.json file with info of found books.
+	ie:
+	{
+	"2022 Learning DevOps.pdf": {"error": "0", "title": "Learning DevOps, 2nd Edition", "subtitle": "A comprehensive guide to accelerating DevOps culture adoption with Terraform, Azure DevOps, Kubernetes, and Jenkins", "authors": "Mikael Krief", "publisher": "Packt Publishing", "language": "English", "isbn10": "1801818967", "isbn13": "9781801818964", "pages": "560", "year": "2022", "rating": "0", "desc": "In the implementation of DevOps processes, the choice of tools is crucial to the sustainability of projects and collaboration between developers and ops. This book presents the different patterns and tools for provisioning and configuring an infrastructure in the cloud, covering mostly open source t...", "price": "$44.99", "image": "https://itbook.store/img/books/9781801818964.png", "url": "https://itbook.store/books/9781801818964"}, 
+	"2022 Learning Modern Linux.pdf": {"error": "0", "title": "Learning Modern Linux", "subtitle": "A Handbook for the Cloud Native Practitioner", "authors": "Michael Hausenblas", "publisher": "O'Reilly Media", "language": "English", "isbn10": "1098108949", "isbn13": "9781098108946", "pages": "258", "year": "2022", "rating": "4", "desc": "If you use Linux in development or operations and need a structured approach to help you dive deeper, this book is for you. Author Michael Hausenblas also provides tips and tricks for improving your workflow with this open source operating system. Whether you&#039;re a developer, software architect,...", "price": "$44.71", "image": "https://itbook.store/img/books/9781098108946.png", "url": "https://itbook.store/books/9781098108946"},
+	"2020 PYTHON ONE-LINERS.pdf": {"error": "0", "title": "Python One-Liners", "subtitle": "Write Concise, Eloquent Python Like a Professional", "authors": "Christian Mayer", "publisher": "No Starch Press", "language": "English", "isbn10": "1718500505", "isbn13": "9781718500501", "pages": "216", "year": "2020", "rating": "5", "desc": "Python One-Liners will teach you how to read and write &quot;one-liners&quot;: concise statements of useful functionality packed into a single line of code. You&#039;ll learn how to systematically unpack and understand any line of Python code, and write eloquent, powerfully compressed Python like an...", "price": "$39.95", "image": "https://itbook.store/img/books/9781718500501.png", "url": "https://itbook.store/books/9781718500501", "pdf": {"Chapter 2": "https://itbook.store/files/9781718500501/chapter2.pdf"}},
+	}
+
+	checkyearapidata.json file if there was correct title but with different name	
+	notfound.txt file with year and titles of books that hasn't been found
+
+"""
+
 import requests
 import json
 import os
@@ -38,9 +64,12 @@ def second_check(book_name, data):
         return False
 
 if __name__ == '__main__':
+
+    txtfile = 'allbooksuniq.txt'
+
     datafile = open('foundapidata.json', 'w')
     datafilecheckyear = open('checkyearapidata.json', 'w')
-    txtfile = 'allbooksuniq.txt'
+
     datadict = {}
     datadictcheckyear = {}
     notfound = []
