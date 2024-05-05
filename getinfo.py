@@ -1,7 +1,8 @@
 """
 
 GET INFO ABOUT BOOKS - title, subtitle, authors, publisher, language, isbn10, isbn13, 
-	pages, rating, description, price, link to image, link to book on itbook.store site, pdf if there is.
+	pages, rating, description, price, link to image, link to book on itbook.store site, pdf if there is
+ 	and save it into json file. 
 
 input:
 	txtfile variable - path to txtfile with year and title of books one by line.
@@ -19,7 +20,7 @@ output:
 	"2020 PYTHON ONE-LINERS.pdf": {"error": "0", "title": "Python One-Liners", "subtitle": "Write Concise, Eloquent Python Like a Professional", "authors": "Christian Mayer", "publisher": "No Starch Press", "language": "English", "isbn10": "1718500505", "isbn13": "9781718500501", "pages": "216", "year": "2020", "rating": "5", "desc": "Python One-Liners will teach you how to read and write &quot;one-liners&quot;: concise statements of useful functionality packed into a single line of code. You&#039;ll learn how to systematically unpack and understand any line of Python code, and write eloquent, powerfully compressed Python like an...", "price": "$39.95", "image": "https://itbook.store/img/books/9781718500501.png", "url": "https://itbook.store/books/9781718500501", "pdf": {"Chapter 2": "https://itbook.store/files/9781718500501/chapter2.pdf"}},
 	}
 
-	checkyearapidata.json file if there was correct title but with different name	
+	checkyearapidata.json file if there was correct title but with different year	
 	notfound.txt file with year and titles of books that hasn't been found
 
 """
@@ -29,7 +30,6 @@ import json
 import os
 
 
-search1 = '2017 Python Testing with pytest'
 APISEARCH = 'https://api.itbook.store/1.0/search/'
 APIBYISBN = 'https://api.itbook.store/1.0/books/'
 
